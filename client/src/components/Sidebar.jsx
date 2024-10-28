@@ -10,7 +10,7 @@ import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { AiFillShopping } from "react-icons/ai";
 import { HiUsers } from "react-icons/hi";
 import { FaTag } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
   {
@@ -36,6 +36,8 @@ const navItems = [
 ];
 
 const Sidebar = () => {
+  const location = useLocation();
+
   return (
     <Box
       sx={{
@@ -66,40 +68,48 @@ const Sidebar = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: 1,
             color: "text.primary",
           }}
         >
-          {navItems.map((item, id) => (
-            <Link
-              to={item.url}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ListItem
+          {navItems.map((item, id) => {
+            const isActive = location.pathname === item.url;
+
+            return (
+              <Link
                 key={id}
-                sx={{
-                  cursor: "pointer",
-                  height: "3rem",
-                  ":hover": {
-                    border: "1px solid #B0B3E6",
-                    borderRadius: "15px",
-                  },
-                }}
+                to={item.url}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                <ListItemIcon sx={{ minWidth: "1.8rem" }}>
-                  <item.icon size={20} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.name}
-                  primaryTypographyProps={{
-                    fontSize: 20,
-                    fontWeight: "medium",
-                    letterSpacing: 0,
+                <ListItem
+                  key={id}
+                  sx={{
+                    cursor: "pointer",
+                    height: "2.5rem",
+                    borderRadius: "10px",
+                    border: isActive ? "1px solid #B0B3E6" : "none",
+                    backgroundColor: isActive ? "#f5f5f5" : "transparent",
+                    ":hover": {
+                      border: "1px solid #B0B3E6",
+                      borderRadius: "10px",
+                    },
                   }}
-                />
-              </ListItem>
-            </Link>
-          ))}
+                >
+                  <ListItemIcon sx={{ minWidth: "1.8rem" }}>
+                    <item.icon size={20} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.name}
+                    primaryTypographyProps={{
+                      fontSize: 18,
+                      fontWeight: "medium",
+                      letterSpacing: 0,
+                    }}
+                  />
+                </ListItem>
+              </Link>
+            );
+          })}
         </List>
       </Box>
     </Box>

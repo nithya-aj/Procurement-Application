@@ -9,7 +9,7 @@ const columns = [
 ];
 
 const rows = [
-  { name: "Cupcake", calories: 305, fat: 3.7 },
+  { name: "Donut", calories: 305, fat: 3.7 },
   { name: "Donut", calories: 452, fat: 25.0 },
   { name: "Donut", calories: 452, fat: 25.0 },
   { name: "Donut", calories: 452, fat: 25.0 },
@@ -36,7 +36,7 @@ const Suppliers = () => {
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <AddButton label="Supplier" />
-        <DataTable columns={columns} rows={rows} rowsPerPage={8} />
+        <DataTable data={rows} columns={columns} rowsPerPage={8} />
       </Box>
     </>
   );
