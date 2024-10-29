@@ -1,5 +1,7 @@
+import multer from "multer";
 import Item from "../models/items.js";
 import dotenv from 'dotenv';
+import { uploadMultipleImages } from "./upload.js";
 
 dotenv.config();
 
@@ -15,25 +17,26 @@ export const getItems = async (req, res) => {
 
 // Creating new item
 export const createItem = async (req, res) => {
-    try {
-        const isEmpty = Object.values(req.body).some((v) => v === "");
-        if (isEmpty) {
-            return res.status(400).json({ message: "All fields are required." });
+    uploadMultipleImages(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ message: "Image upload failed", error: err.message });
         }
 
-        const uploadResponse = await axios.post(`${process.env.BASE_URL}/upload`, req.files);
-        const imageUrls = uploadResponse.data.imageUrls;
+        try {
+            // Extract image URLs from req.files
+            const imageUrls = req.files.map(file => `/${file.path}`);
 
-        const newItem = await Item.create({
-            ...req.body,
-            itemImages: imageUrls,
-        });
+            // Create the item
+            const newItem = await Item.create({
+                ...req.body,
+                itemImages: imageUrls, // Assign the URLs to the itemImages field
+            });
 
-        return res.status(201).json({ message: "Item created successfully", item: newItem });
-    } catch (error) {
-        console.error("Error creating item:", error);
-        return res.status(500).json({ message: "Failed to create item", error: error.message });
-    }
+            return res.status(201).json({ message: "Item created successfully", item: newItem });
+        } catch (error) {
+            return res.status(500).json({ message: "Failed to create item", error: error.message });
+        }
+    });
 };
 
 // Update item
