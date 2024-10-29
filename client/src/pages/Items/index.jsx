@@ -51,6 +51,10 @@ const Items = () => {
     fetchItems();
   }, []);
 
+  const addItem = (newItem) => {
+    setRows((prevRows) => [newItem, ...prevRows]);
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -59,7 +63,7 @@ const Items = () => {
       </Box>
       {/* Form Modal */}
       <AddModal open={open} handleClose={handleClose} title="Add Item">
-        <ItemForm />
+        <ItemForm onClose={handleClose} onAddItem={addItem} />
       </AddModal>
     </>
   );

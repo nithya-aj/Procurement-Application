@@ -12,8 +12,9 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiSolidImageAdd } from "react-icons/bi";
+import { createItem, getSuppliers } from "../../api";
 
 const textFieldStyles = {
   backgroundColor: "transparent",
@@ -44,47 +45,75 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const ItemForm = () => {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
+const ItemForm = ({ onClose, onAddItem }) => {
+  const [itemName, setItemName] = useState("");
+  const [inventoryLocation, setInventoryLocation] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
   const [stockUnit, setStockUnit] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
-  const [status, setStatus] = useState("enabled");
+  const [status, setStatus] = useState("Enabled");
   const [selectedImages, setSelectedImages] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
-  // Supplier list
-  const suppliers = [
-    { supplierNo: "S001", supplierName: "ABC Supplies" },
-    { supplierNo: "S002", supplierName: "Global Traders" },
-    { supplierNo: "S004", supplierName: "Supreme Goods" },
-    { supplierNo: "S005", supplierName: "Quality Items" },
-  ];
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const response = await getSuppliers();
+        setSuppliers(response.data);
+      } catch (error) {
+        console.error("Error fetching suppliers:", error);
+      }
+    };
+    fetchSuppliers();
+  }, []);
 
-  // Handle change for dropdowns and other fields
   const handleSupplierChange = (event) =>
     setSelectedSupplier(event.target.value);
   const handleStockUnitChange = (event) => setStockUnit(event.target.value);
   const handleImageChange = (event) =>
     setSelectedImages(Array.from(event.target.files));
 
-  // Handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = {
-      name,
-      location,
-      brand,
-      category,
-      supplier: selectedSupplier,
-      stockUnit,
-      unitPrice,
-      status,
-      images: selectedImages,
-    };
-    console.log("Form Data:", formData);
+
+    const formData = new FormData();
+    formData.append("itemName", itemName);
+    formData.append("inventoryLocation", inventoryLocation);
+    formData.append("brand", brand);
+    formData.append("category", category);
+    formData.append("supplier", selectedSupplier);
+    formData.append("stockUnit", stockUnit);
+    formData.append("unitPrice", unitPrice);
+    formData.append("status", status);
+
+    selectedImages.forEach((image) => {
+      formData.append("images", image);
+    });
+
+    try {
+      const response = await createItem(formData);
+      console.log("Item Created:", response.data);
+
+      const newItem = {
+        itemNo: response.data.item.itemNo || "",
+        itemName: response.data.item.itemName || "",
+        location: response.data.item.inventoryLocation || "",
+        brand: response.data.item.brand || "",
+        category: response.data.item.category || "",
+        supplier: response.data.item.supplier?.supplierName || "",
+        stockUnit: response.data.item.stockUnit || "",
+        unitPrice: response.data.item.unitPrice || 0,
+        status: response.data.item.status || "",
+      };
+
+      onAddItem(newItem);
+      setSelectedImages([]);
+      onClose();
+    } catch (error) {
+      console.error("Error creating item:", error);
+    }
   };
 
   return (
@@ -103,8 +132,8 @@ const ItemForm = () => {
             label="Name"
             variant="filled"
             sx={{ ...textFieldStyles }}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={itemName}
+            onChange={(e) => setItemName(e.target.value)}
           />
           <TextField
             required
@@ -112,8 +141,8 @@ const ItemForm = () => {
             label="Location"
             variant="filled"
             sx={{ ...textFieldStyles }}
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={inventoryLocation}
+            onChange={(e) => setInventoryLocation(e.target.value)}
           />
         </Box>
         <Box
@@ -153,7 +182,7 @@ const ItemForm = () => {
             label="Supplier"
           >
             {suppliers.map((supplier) => (
-              <MenuItem key={supplier.supplierNo} value={supplier.supplierNo}>
+              <MenuItem key={supplier.supplierNo} value={supplier._id}>
                 {supplier.supplierName}
               </MenuItem>
             ))}
@@ -178,17 +207,18 @@ const ItemForm = () => {
           required
           id="filled-required"
           label="Unit price"
+          type="number"
           variant="filled"
           sx={{ ...textFieldStyles }}
           value={unitPrice}
           onChange={(e) => setUnitPrice(e.target.value)}
         />
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, pt:2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, pt: 2 }}>
           <Button
             component="label"
             variant="contained"
             startIcon={<BiSolidImageAdd />}
-            sx={{ ...textFieldStyles, minWidth:'9.5rem' }}
+            sx={{ ...textFieldStyles, minWidth: "9.5rem" }}
           >
             Add Images
             <VisuallyHiddenInput
@@ -230,12 +260,12 @@ const ItemForm = () => {
             onChange={(e) => setStatus(e.target.value)}
           >
             <FormControlLabel
-              value="enabled"
+              value="Enabled"
               control={<Radio />}
               label="Enabled"
             />
             <FormControlLabel
-              value="disabled"
+              value="Disabled"
               control={<Radio />}
               label="Disabled"
             />

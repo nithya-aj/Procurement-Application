@@ -8,6 +8,14 @@ export const updateSupplier = (id, data) => axios.put(`${API_URL}/supplier/${id}
 export const deleteSupplier = (id) => axios.delete(`${API_URL}/supplier/${id}`);
 
 export const getItems = () => axios.get(`${API_URL}/items/all`);
-export const createItem = (data) => axios.post(`${API_URL}/items/create`, data);
+
+export const createItem = async (formData) => {
+    return axios.post(`${API_URL}/items/create`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data", 
+        },
+    });
+};
+
 export const updateItem = (id, data) => axios.put(`${API_URL}/items/${id}`, data);
 export const deleteItem = (id) => axios.delete(`${API_URL}/items/${id}`);
