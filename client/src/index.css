@@ -13,9 +13,6 @@ body,
   box-sizing: border-box;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
 .menu-flags {
   width: "100%";
   background-color: #f5f5f5;
@@ -40,4 +37,28 @@ body,
 .css-mkcl50-MuiFormLabel-root.Mui-focused,
 .css-18pvzty-MuiFormLabel-root.Mui-focused {
   color: #333333 !important;
+}
+
+.css-4w9ez6-MuiPaper-root-MuiTableContainer-root {
+  max-height: 30rem;
+  overflow: scroll;
+}
+
+/* scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: #cdcdcd;
+  opacity: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6a6f9a;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }

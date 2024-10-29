@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import CountrySelect from "../../components/CountrySelect";
+import { createSupplier } from "../../api";
 
 const textFieldStyles = {
   backgroundColor: "transparent",
@@ -28,27 +29,34 @@ const textFieldStyles = {
   },
 };
 
-const SupplierForm = () => {
+const SupplierForm = ({ onClose, onAddSupplier }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [taxNumber, setTaxNumber] = useState("");
   const [country, setCountry] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [status, setStatus] = useState("active");
+  const [status, setStatus] = useState("Active");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const supplierData = {
-      name,
+      supplierName: name,
       email,
       address,
-      taxNumber,
+      taxNo: taxNumber,
       country,
-      mobileNumber,
+      mobileNo: mobileNumber,
       status,
     };
-    console.log(supplierData, "supplierData");
+
+    try {
+      const response = await createSupplier(supplierData);
+      onAddSupplier(response.data.supplier);
+      onClose();
+    } catch (error) {
+      console.error("Error adding supplier:", error);
+    }
   };
 
   return (
@@ -122,17 +130,17 @@ const SupplierForm = () => {
             onChange={(e) => setStatus(e.target.value)}
           >
             <FormControlLabel
-              value="active"
+              value="Active"
               control={<Radio />}
               label="Active"
             />
             <FormControlLabel
-              value="inactive"
+              value="Inactive"
               control={<Radio />}
               label="Inactive"
             />
             <FormControlLabel
-              value="blocked"
+              value="Blocked"
               control={<Radio />}
               label="Blocked"
             />

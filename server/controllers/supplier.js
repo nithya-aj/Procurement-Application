@@ -3,7 +3,7 @@ import Supplier from "../models/supplier.js";
 // fetching all suppliers
 export const getSuppliers = async (req, res) => {
     try {
-        const allSuppliers = await Supplier.find({})
+        const allSuppliers = await Supplier.find({}).sort({ createdAt: -1 });
         return res.status(200).json(allSuppliers);
     } catch (error) {
         return res.status(500).json({ message: "Error fetching suppliers", error: error.message });

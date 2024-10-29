@@ -76,7 +76,7 @@ function TablePaginationActions(props) {
   );
 }
 
-function DataTable({ data, columns, rowsPerPage = 8 }) {
+function DataTable({ data, columns, rowsPerPage }) {
   const [page, setPage] = React.useState(0);
 
   const handleChangePage = (event, newPage) => setPage(newPage);

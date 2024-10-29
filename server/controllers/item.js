@@ -8,7 +8,7 @@ dotenv.config();
 // Fetching all items
 export const getItems = async (req, res) => {
     try {
-        const allItems = await Item.find({}).populate('supplier');
+        const allItems = await Item.find({}).populate('supplier').sort({ createdAt: -1 });
         return res.status(200).json(allItems);
     } catch (error) {
         return res.status(500).json({ message: "Error fetching items", error: error.message });

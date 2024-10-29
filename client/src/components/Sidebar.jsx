@@ -6,18 +6,12 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { AiFillShopping } from "react-icons/ai";
 import { HiUsers } from "react-icons/hi";
 import { FaTag } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
-  {
-    icon: RiDashboardHorizontalFill,
-    name: "Dashboard",
-    url: "/",
-  },
   {
     icon: HiUsers,
     name: "Suppliers",
