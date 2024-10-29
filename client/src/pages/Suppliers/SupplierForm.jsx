@@ -29,10 +29,30 @@ const textFieldStyles = {
 };
 
 const SupplierForm = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [taxNumber, setTaxNumber] = useState("");
   const [country, setCountry] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [status, setStatus] = useState("active");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const supplierData = {
+      name,
+      email,
+      address,
+      taxNumber,
+      country,
+      mobileNumber,
+      status,
+    };
+    console.log(supplierData, "supplierData");
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Box
           sx={{
@@ -47,6 +67,8 @@ const SupplierForm = () => {
             label="Name"
             variant="filled"
             sx={{ ...textFieldStyles }}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <TextField
             required
@@ -55,6 +77,8 @@ const SupplierForm = () => {
             variant="filled"
             type="email"
             sx={{ ...textFieldStyles }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Box>
         <TextField
@@ -63,6 +87,8 @@ const SupplierForm = () => {
           label="Address"
           variant="filled"
           sx={{ ...textFieldStyles }}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
         />
         <TextField
           required
@@ -70,6 +96,8 @@ const SupplierForm = () => {
           label="Tax Number"
           variant="filled"
           sx={{ ...textFieldStyles }}
+          value={taxNumber}
+          onChange={(e) => setTaxNumber(e.target.value)}
         />
         <CountrySelect selected={country} onChange={setCountry} />
         <TextField
@@ -79,6 +107,8 @@ const SupplierForm = () => {
           variant="filled"
           type="tel"
           sx={{ ...textFieldStyles }}
+          value={mobileNumber}
+          onChange={(e) => setMobileNumber(e.target.value)}
         />
         <FormControl>
           <FormLabel id="demo-row-radio-buttons-group-label" sx={{ pt: 2 }}>
@@ -88,7 +118,8 @@ const SupplierForm = () => {
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
-            defaultValue={"active"}
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
           >
             <FormControlLabel
               value="active"
@@ -114,6 +145,7 @@ const SupplierForm = () => {
             color: "text.main",
           }}
           variant="contained"
+          type="submit"
         >
           Submit
         </Button>

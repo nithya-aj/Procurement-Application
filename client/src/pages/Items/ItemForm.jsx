@@ -45,19 +45,50 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const ItemForm = () => {
-  const [age, setAge] = React.useState("");
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
+  const [selectedSupplier, setSelectedSupplier] = useState("");
+  const [stockUnit, setStockUnit] = useState("");
+  const [unitPrice, setUnitPrice] = useState("");
+  const [status, setStatus] = useState("enabled");
   const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-  const handleImageChange = (event) => {
-    const files = Array.from(event.target.files);
-    setSelectedImages(files);
+  // Supplier list
+  const suppliers = [
+    { supplierNo: "S001", supplierName: "ABC Supplies" },
+    { supplierNo: "S002", supplierName: "Global Traders" },
+    { supplierNo: "S004", supplierName: "Supreme Goods" },
+    { supplierNo: "S005", supplierName: "Quality Items" },
+  ];
+
+  // Handle change for dropdowns and other fields
+  const handleSupplierChange = (event) =>
+    setSelectedSupplier(event.target.value);
+  const handleStockUnitChange = (event) => setStockUnit(event.target.value);
+  const handleImageChange = (event) =>
+    setSelectedImages(Array.from(event.target.files));
+
+  // Handle form submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+      name,
+      location,
+      brand,
+      category,
+      supplier: selectedSupplier,
+      stockUnit,
+      unitPrice,
+      status,
+      images: selectedImages,
+    };
+    console.log("Form Data:", formData);
   };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Box
           sx={{
@@ -72,6 +103,8 @@ const ItemForm = () => {
             label="Name"
             variant="filled"
             sx={{ ...textFieldStyles }}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <TextField
             required
@@ -79,6 +112,8 @@ const ItemForm = () => {
             label="Location"
             variant="filled"
             sx={{ ...textFieldStyles }}
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
           />
         </Box>
         <Box
@@ -94,6 +129,8 @@ const ItemForm = () => {
             label="Brand"
             variant="filled"
             sx={{ ...textFieldStyles }}
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
           />
           <TextField
             required
@@ -101,44 +138,40 @@ const ItemForm = () => {
             label="Category"
             variant="filled"
             sx={{ ...textFieldStyles }}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
           />
         </Box>
         <FormControl
           variant="standard"
           sx={{ m: 1, minWidth: 120, ...textFieldStyles }}
         >
-          <InputLabel id="demo-simple-select-standard-label">
-            Supplier
-          </InputLabel>
+          <InputLabel>Supplier</InputLabel>
           <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={age}
-            onChange={handleChange}
+            value={selectedSupplier}
+            onChange={handleSupplierChange}
             label="Supplier"
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {suppliers.map((supplier) => (
+              <MenuItem key={supplier.supplierNo} value={supplier.supplierNo}>
+                {supplier.supplierName}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl
           variant="standard"
           sx={{ m: 1, minWidth: 120, ...textFieldStyles }}
         >
-          <InputLabel id="demo-simple-select-standard-label">
-            Stock Unit
-          </InputLabel>
+          <InputLabel>Stock Unit</InputLabel>
           <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={age}
-            onChange={handleChange}
+            value={stockUnit}
+            onChange={handleStockUnitChange}
             label="Stock Unit"
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value="pieces">Pieces</MenuItem>
+            <MenuItem value="sets">Sets</MenuItem>
+            <MenuItem value="boxes">Boxes</MenuItem>
           </Select>
         </FormControl>
         <TextField
@@ -147,20 +180,15 @@ const ItemForm = () => {
           label="Unit price"
           variant="filled"
           sx={{ ...textFieldStyles }}
+          value={unitPrice}
+          onChange={(e) => setUnitPrice(e.target.value)}
         />
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, pt:2 }}>
           <Button
-            sx={{
-              ...textFieldStyles,
-              alignSelf: "flex-start",
-              mt: 2,
-              minWidth: "9.5rem",
-            }}
             component="label"
-            role={undefined}
             variant="contained"
-            tabIndex={-1}
             startIcon={<BiSolidImageAdd />}
+            sx={{ ...textFieldStyles, minWidth:'9.5rem' }}
           >
             Add Images
             <VisuallyHiddenInput
@@ -169,26 +197,24 @@ const ItemForm = () => {
               multiple
             />
           </Button>
-          {/* Displaing selected images */}
+
+          {/* Displaying selected images */}
           <Box sx={{ display: "flex", flexWrap: "wrap", mt: 2 }}>
-            {selectedImages.length > 0 &&
-              selectedImages.map((image, index) => (
-                <Box
-                  key={index}
-                  component="img"
-                  src={URL.createObjectURL(image)}
-                  alt={`Selected Image ${index + 1}`}
-                  sx={{
-                    width: "38px",
-                    height: "38px",
-                    objectFit: "cover",
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
-                    marginRight: "8px",
-                    marginBottom: "8px",
-                  }}
-                />
-              ))}
+            {selectedImages.map((image, index) => (
+              <Box
+                key={index}
+                component="img"
+                src={URL.createObjectURL(image)}
+                alt={`Selected ${index + 1}`}
+                sx={{
+                  width: 38,
+                  height: 38,
+                  objectFit: "cover",
+                  borderRadius: 2,
+                  m: 1,
+                }}
+              />
+            ))}
           </Box>
         </Box>
 
@@ -200,7 +226,8 @@ const ItemForm = () => {
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
-            defaultValue={"enabled"}
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
           >
             <FormControlLabel
               value="enabled"
@@ -215,6 +242,7 @@ const ItemForm = () => {
           </RadioGroup>
         </FormControl>
         <Button
+          type="submit"
           sx={{
             alignSelf: "flex-end",
             borderColor: "secondary.accent",

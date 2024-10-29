@@ -15,7 +15,6 @@ const style = {
 };
 
 const AddModal = ({ open, handleClose, title, children }) => {
-  console.log(title, open, "title...open...");
   return (
     <Modal
       open={open}
