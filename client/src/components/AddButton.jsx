@@ -1,15 +1,14 @@
-import React from "react";
 import Button from "@mui/material/Button";
 import { IoAdd } from "react-icons/io5";
 
-const AddButton = ({ label }) => {
+const AddButton = ({ onClick, label }) => {
   return (
     <Button
+      onClick={onClick}
       sx={{
         alignSelf: "flex-end",
-        color: "text.primary",
+        color: "text.main",
         borderColor: "transparent",
-        // borderRadius: "27px",
         background: "#F5F5F5",
         boxShadow: "5px 5px 9px #e1e1e1, -5px -5px 9px #ffffff",
       }}

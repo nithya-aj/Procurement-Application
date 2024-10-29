@@ -20,6 +20,7 @@ const theme = createTheme({
         },
         secondary: {
             main: colorTokens.secondary,
+            accent: colorTokens.accent
         },
         error: {
             main: colorTokens.error,
@@ -31,7 +32,7 @@ const theme = createTheme({
             default: colorTokens.background,
         },
         text: {
-            primary: colorTokens.text,
+            main: colorTokens.text,
         },
     },
 });

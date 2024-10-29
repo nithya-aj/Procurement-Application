@@ -69,7 +69,7 @@ const Sidebar = () => {
             display: "flex",
             flexDirection: "column",
             gap: 1,
-            color: "text.primary",
+            color: "text.main",
           }}
         >
           {navItems.map((item, id) => {
