@@ -10,6 +10,16 @@ export const getSuppliers = async (req, res) => {
     }
 };
 
+// Fetching active suppliers
+export const getActiveSuppliers = async (req, res) => {
+    try {
+        const activeSuppliers = await Supplier.find({ status: "Active" });
+        return res.status(200).json(activeSuppliers);
+    } catch (error) {
+        return res.status(500).json({ message: "Error fetching suppliers", error: error.message });
+    }
+};
+
 // creating new supplier
 export const createSupplier = async (req, res) => {
     try {

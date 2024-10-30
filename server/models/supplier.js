@@ -7,7 +7,7 @@ const supplierSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
-            default: uuidV4
+            default: () => uuidV4()
         },
         supplierName: {
             type: String,

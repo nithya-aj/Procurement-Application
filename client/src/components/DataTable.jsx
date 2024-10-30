@@ -64,24 +64,41 @@ function TablePaginationActions(props) {
         {theme.direction === "rtl" ? <MdLastPage /> : <MdFirstPage />}
       </IconButton>
       <IconButton onClick={handleBackButtonClick} disabled={page === 0}>
-        {theme.direction === "rtl" ? <MdKeyboardArrowRight /> : <MdKeyboardArrowLeft />}
+        {theme.direction === "rtl" ? (
+          <MdKeyboardArrowRight />
+        ) : (
+          <MdKeyboardArrowLeft />
+        )}
       </IconButton>
-      <IconButton onClick={handleNextButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}>
-        {theme.direction === "rtl" ? <MdKeyboardArrowLeft /> : <MdKeyboardArrowRight />}
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+      >
+        {theme.direction === "rtl" ? (
+          <MdKeyboardArrowLeft />
+        ) : (
+          <MdKeyboardArrowRight />
+        )}
       </IconButton>
-      <IconButton onClick={handleLastPageButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+      >
         {theme.direction === "rtl" ? <MdFirstPage /> : <MdLastPage />}
       </IconButton>
     </Box>
   );
 }
 
-function DataTable({ data, columns, rowsPerPage }) {
+function DataTable({ data, columns, rowsPerPage, rowClickHandler }) {
   const [page, setPage] = React.useState(0);
 
   const handleChangePage = (event, newPage) => setPage(newPage);
 
-  const displayedRows = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const displayedRows = data.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
   const emptyRows = rowsPerPage - displayedRows.length;
 
   return (
@@ -98,7 +115,11 @@ function DataTable({ data, columns, rowsPerPage }) {
         </TableHead>
         <TableBody>
           {displayedRows.map((row, rowIndex) => (
-            <StyledTableRow key={rowIndex}>
+            <StyledTableRow
+              key={rowIndex}
+              onClick={() => rowClickHandler(row.itemNo)}
+              sx={{ cursor: "pointer" }}
+            >
               {columns.map((column) => (
                 <StyledTableCell key={column.id} align={column.align || "left"}>
                   {row[column.id]}

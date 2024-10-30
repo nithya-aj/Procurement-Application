@@ -1,4 +1,3 @@
-import multer from "multer";
 import Item from "../models/items.js";
 import dotenv from 'dotenv';
 import { uploadMultipleImages } from "./upload.js";
@@ -15,6 +14,20 @@ export const getItems = async (req, res) => {
     }
 };
 
+// fetching particular item
+export const getItemById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const item = await Item.findOne({ itemNo: id }).populate('supplier');
+        if (!item) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        return res.status(200).json(item);
+    } catch (error) {
+        return res.status(500).json({ message: "Error fetching item", error: error.message });
+    }
+};
+
 // Creating new item
 export const createItem = async (req, res) => {
     uploadMultipleImages(req, res, async (err) => {
@@ -23,13 +36,13 @@ export const createItem = async (req, res) => {
         }
 
         try {
-            // Extract image URLs from req.files
-            const imageUrls = req.files.map(file => `/${file.path}`);
+            // Keep the image path as is, without '/public'
+            const imageUrls = req.files.map(file => `/images/${file.filename}`);
 
             // Create the item
             const newItem = await Item.create({
                 ...req.body,
-                itemImages: imageUrls, // Assign the URLs to the itemImages field
+                itemImages: imageUrls,
             });
 
             return res.status(201).json({ message: "Item created successfully", item: newItem });
@@ -38,6 +51,7 @@ export const createItem = async (req, res) => {
         }
     });
 };
+
 
 // Update item
 export const updateItem = async (req, res) => {
@@ -70,3 +84,4 @@ export const deleteItem = async (req, res) => {
         return res.status(500).json({ message: "Error deleting item", error: error.message });
     }
 };
+

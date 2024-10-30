@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { styled } from "@mui/material/styles";
+import { useLocation } from "react-router-dom";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -48,6 +49,11 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const location = useLocation();
+  const pageName = location.pathname.split("/").filter(Boolean); 
+  const displayName = pageName[0] === "items" ? "Items" : pageName[0] === "suppliers" ? "Suppliers" : ""
+
   return (
     <>
       <Box
@@ -61,7 +67,7 @@ const Navbar = () => {
         }}
       >
         <Box>
-          <Typography variant="h5">Dashboard</Typography>
+          <Typography variant="h5">{displayName}</Typography>
         </Box>
         <IconButton
           onClick={handleClick}

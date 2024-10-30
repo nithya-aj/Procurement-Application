@@ -22,11 +22,11 @@ const navItems = [
     name: "Items",
     url: "/items",
   },
-  {
-    icon: AiFillShopping,
-    name: "Purchase",
-    url: "/purchase",
-  },
+  // {
+  //   icon: AiFillShopping,
+  //   name: "Purchase",
+  //   url: "/purchase",
+  // },
 ];
 
 const Sidebar = () => {
@@ -67,8 +67,10 @@ const Sidebar = () => {
           }}
         >
           {navItems.map((item, id) => {
-            const isActive = location.pathname === item.url;
-
+            const isActive =
+              location.pathname === item.url ||
+              (item.url === "/items" &&
+                location.pathname.startsWith("/items/"));
             return (
               <Link
                 key={id}

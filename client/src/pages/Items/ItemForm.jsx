@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { BiSolidImageAdd } from "react-icons/bi";
-import { createItem, getSuppliers } from "../../api";
+import { createItem, getActiveSuppliers } from "../../api";
 
 const textFieldStyles = {
   backgroundColor: "transparent",
@@ -45,7 +45,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const ItemForm = ({ onClose, onAddItem }) => {
+const ItemForm = ({ onClose }) => {
   const [itemName, setItemName] = useState("");
   const [inventoryLocation, setInventoryLocation] = useState("");
   const [brand, setBrand] = useState("");
@@ -58,20 +58,25 @@ const ItemForm = ({ onClose, onAddItem }) => {
   const [suppliers, setSuppliers] = useState([]);
 
   useEffect(() => {
-    const fetchSuppliers = async () => {
+    const fetchActiveSuppliers = async () => {
       try {
-        const response = await getSuppliers();
+        const response = await getActiveSuppliers();
         setSuppliers(response.data);
       } catch (error) {
         console.error("Error fetching suppliers:", error);
       }
     };
-    fetchSuppliers();
+    fetchActiveSuppliers();
   }, []);
 
   const handleSupplierChange = (event) =>
     setSelectedSupplier(event.target.value);
-  const handleStockUnitChange = (event) => setStockUnit(event.target.value);
+
+  const handleStockUnitChange = (event) => {
+    const value = event.target.value;
+    setStockUnit(value);
+  };
+
   const handleImageChange = (event) =>
     setSelectedImages(Array.from(event.target.files));
 
@@ -95,20 +100,6 @@ const ItemForm = ({ onClose, onAddItem }) => {
     try {
       const response = await createItem(formData);
       console.log("Item Created:", response.data);
-
-      const newItem = {
-        itemNo: response.data.item.itemNo || "",
-        itemName: response.data.item.itemName || "",
-        location: response.data.item.inventoryLocation || "",
-        brand: response.data.item.brand || "",
-        category: response.data.item.category || "",
-        supplier: response.data.item.supplier?.supplierName || "",
-        stockUnit: response.data.item.stockUnit || "",
-        unitPrice: response.data.item.unitPrice || 0,
-        status: response.data.item.status || "",
-      };
-
-      onAddItem(newItem);
       setSelectedImages([]);
       onClose();
     } catch (error) {
@@ -203,6 +194,7 @@ const ItemForm = ({ onClose, onAddItem }) => {
             <MenuItem value="boxes">Boxes</MenuItem>
           </Select>
         </FormControl>
+
         <TextField
           required
           id="filled-required"
@@ -228,7 +220,6 @@ const ItemForm = ({ onClose, onAddItem }) => {
             />
           </Button>
 
-          {/* Displaying selected images */}
           <Box sx={{ display: "flex", flexWrap: "wrap", mt: 2 }}>
             {selectedImages.map((image, index) => (
               <Box

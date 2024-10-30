@@ -1,7 +1,5 @@
-// theme.js
 import { createTheme } from '@mui/material/styles';
 
-// Color design tokens
 export const colorTokens = {
     primary: '#D7D9FF',
     secondary: '#B0B3E6',

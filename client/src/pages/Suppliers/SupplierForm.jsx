@@ -29,7 +29,7 @@ const textFieldStyles = {
   },
 };
 
-const SupplierForm = ({ onClose, onAddSupplier }) => {
+const SupplierForm = ({ onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
@@ -52,7 +52,7 @@ const SupplierForm = ({ onClose, onAddSupplier }) => {
 
     try {
       const response = await createSupplier(supplierData);
-      onAddSupplier(response.data.supplier);
+      console.log("Supplier Created:", response.data);
       onClose();
     } catch (error) {
       console.error("Error adding supplier:", error);

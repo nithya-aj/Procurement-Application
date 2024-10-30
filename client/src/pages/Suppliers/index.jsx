@@ -22,34 +22,33 @@ const Suppliers = () => {
   const [rows, setRows] = useState([]);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    fetchSuppliers();
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const response = await getSuppliers();
+      const suppliersData = response.data.map((supplier) => ({
+        supplierNo: supplier.supplierNo,
+        supplierName: supplier.supplierName,
+        address: supplier.address,
+        taxNo: supplier.taxNo,
+        country: supplier.country,
+        mobileNo: supplier.mobileNo,
+        email: supplier.email,
+        status: supplier.status,
+      }));
+      setRows(suppliersData);
+    } catch (error) {
+      console.error("Error fetching suppliers:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchSuppliers = async () => {
-      try {
-        const response = await getSuppliers();
-        const suppliersData = response.data.map((supplier) => ({
-          supplierNo: supplier.supplierNo,
-          supplierName: supplier.supplierName,
-          address: supplier.address,
-          taxNo: supplier.taxNo,
-          country: supplier.country,
-          mobileNo: supplier.mobileNo,
-          email: supplier.email,
-          status: supplier.status,
-        }));
-        setRows(suppliersData);
-      } catch (error) {
-        console.error("Error fetching suppliers:", error);
-      }
-    };
-
     fetchSuppliers();
   }, []);
-
-  const addSupplier = (newSupplier) => {
-    setRows((prevRows) => [newSupplier, ...prevRows]); 
-  };
 
   return (
     <>
@@ -59,7 +58,7 @@ const Suppliers = () => {
       </Box>
       {/* Form Modal */}
       <AddModal open={open} handleClose={handleClose} title="Add Supplier">
-        <SupplierForm onClose={handleClose} onAddSupplier={addSupplier} />
+        <SupplierForm onClose={handleClose} />
       </AddModal>
     </>
   );

@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, "views/build")));
 // db connect
 dbConnection()
 
-app.use('/images', express.static('public/images'))
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

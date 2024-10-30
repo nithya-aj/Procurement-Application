@@ -13,10 +13,10 @@ const Layout = () => {
         bgcolor: "background.default",
       }}
     >
-      <Box sx={{ width: "15%" }}>
+      <Box sx={{ width: "14%" }}>
         <Sidebar />
       </Box>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1, width: "86%" }}>
         <Navbar />
         <Box sx={{ padding: 4 }}>
           <Outlet />
