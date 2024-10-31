@@ -82,7 +82,7 @@ const ItemDetails = () => {
                 style={{
                   width: "30rem",
                   height: "20rem",
-                  objectFit: "cover",
+                  objectFit: "contain",
                   borderRadius: "10px",
                 }}
               />
