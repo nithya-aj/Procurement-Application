@@ -117,7 +117,7 @@ A fullstack procurement application built for managing Suppliers, Items, and Pur
    npm run dev
 
 ## Screenshots
-![suppliers](src/assets/suppliers.png)
-![items](src/assets/items.png)
-![item details](src/assets/itemDetails.png)
+![suppliers](client/src/assets/suppliers.png)
+![items](client/src/assets/items.png)
+![item details](client/src/assets/itemDetails.png)
 
